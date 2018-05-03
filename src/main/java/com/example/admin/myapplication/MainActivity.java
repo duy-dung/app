@@ -1,21 +1,16 @@
 package com.example.admin.myapplication;
 
 import android.content.Intent;
-import android.media.projection.MediaProjection;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-
-import static com.example.admin.myapplication.BuildConfig.DEBUG;
+import com.example.admin.myapplication.service.FloatingViewService;
 
 public class MainActivity extends AppCompatActivity {
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
@@ -45,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startService(new Intent(MainActivity.this, FloatingViewService.class));
+                Intent intent =new Intent(MainActivity.this,FloatingViewService.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startService(intent);
                 finish();
             }
         });

@@ -1,104 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <!--Root container-->
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/root_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="UselessParent">
 
         <!--View while view is collapsed-->
-        <RelativeLayout
-            android:id="@+id/collapse_view"
-            android:layout_width="wrap_content"
-            android:visibility="visible"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
-            <!--Icon of floating widget -->
-            <ImageView
-                android:id="@+id/collapsed_iv"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/ic_android_circle"
-                tools:ignore="ContentDescription"/>
+        <!--Icon of floating widget -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_0"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_2"
+            app:layout_constraintTop_toBottomOf="@+id/btn_3"
+            app:srcCompat="@drawable/ic_android_circle"
+            tools:ignore="MissingConstraints" />
 
-            <!--Close button-->
-            <ImageView
-                android:id="@+id/close_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="40dp"
-                android:src="@drawable/ic_close"
-                tools:ignore="ContentDescription"/>
-        </RelativeLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_0"
+            app:srcCompat="@drawable/ic_open"
+            tools:ignore="MissingConstraints" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icons8_play"
+            tools:ignore="MissingConstraints" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_0"
+            app:srcCompat="@drawable/ic_close_black_24dp"
+            tools:ignore="MissingConstraints,VectorDrawableCompat" />
+
 
         <!--View while view is expanded-->
-        <LinearLayout
-            android:id="@+id/expanded_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_z"
-            android:visibility="gone"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <!--Album image for the song currently playing.-->
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@android:drawable/ic_delete"
-                tools:ignore="ContentDescription"/>
-
-            <!--Previous button-->
+    </android.support.constraint.ConstraintLayout>
 
 
-            <!--Play button-->
-            <ImageView
-                android:id="@+id/play_btn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/icons8_play"
-                tools:ignore="ContentDescription"/>
-
-            <!--Next button-->
-            <ImageView
-                android:id="@+id/next_btn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center_vertical"
-                android:padding="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/icons8_stop"
-                tools:ignore="ContentDescription"/>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/close_button"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_close"/>
-
-                <ImageView
-                    android:id="@+id/open_button"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentBottom="true"
-                    android:src="@drawable/ic_open"/>
-            </RelativeLayout>
-        </LinearLayout>
-    </RelativeLayout>
 </FrameLayout>
