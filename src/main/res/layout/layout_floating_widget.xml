@@ -2,76 +2,84 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!--Root container-->
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/root_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:ignore="UselessParent">
 
-        <!--View while view is collapsed-->
+        <android.support.constraint.ConstraintLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/root_container"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="UselessParent">
 
-        <!--Icon of floating widget -->
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_0"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btn_2"
-            app:layout_constraintTop_toBottomOf="@+id/btn_3"
-            app:srcCompat="@drawable/ic_android_circle"
-            tools:ignore="MissingConstraints" />
+            <!--View while view is collapsed-->
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_0"
-            app:srcCompat="@drawable/ic_open"
-            tools:ignore="MissingConstraints" />
+            <!--Icon of floating widget -->
+            <android.support.design.widget.FloatingActionButton
+                android:accessibilityTraversalBefore="@id/root_container"
+                android:id="@+id/btn_0"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:elevation="6dp"
+                app:layout_constraintStart_toEndOf="@+id/btn_2"
+                app:layout_constraintTop_toBottomOf="@+id/btn_3"
+                android:src="@drawable/ic_android_circle"
+                tools:ignore="MissingConstraints"
+                />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/icons8_play"
-            tools:ignore="MissingConstraints" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                app:backgroundTint="#ffff"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_0"
+                android:src="@drawable/ic_open"
+                tools:ignore="MissingConstraints" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_0"
-            app:srcCompat="@drawable/ic_close_black_24dp"
-            tools:ignore="MissingConstraints,VectorDrawableCompat" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                app:backgroundTint="#ffff"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/icons8_play"
+                tools:ignore="MissingConstraints" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:backgroundTint="#ffff"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/btn_0"
+                app:srcCompat="@drawable/ic_close_black_24dp"
+                tools:ignore="MissingConstraints,VectorDrawableCompat" />
 
 
-        <!--View while view is expanded-->
-    </android.support.constraint.ConstraintLayout>
-
-
+            <!--View while view is expanded-->
+        </android.support.constraint.ConstraintLayout>
 </FrameLayout>

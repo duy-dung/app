@@ -3,6 +3,8 @@
     package="com.example.admin.myapplication">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
         android:allowBackup="true"
@@ -22,7 +24,11 @@
         <service
             android:name=".service.FloatingViewService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false"/>
+        <service android:name=".service.RecorderScreenService"
+            android:enabled="true"
+            android:exported="false"
+            />
 
     </application>
 
