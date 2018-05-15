@@ -25,7 +25,6 @@ import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
 import com.example.admin.myapplication.MainActivity;
-import com.example.admin.myapplication.NotificationUtils;
 import com.example.admin.myapplication.R;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -48,7 +47,7 @@ public class RecorderScreenService extends Service {
     private static final int REQUEST_PERMISSIONS = 10;
     private NotificationManager notifManager = null;
     final int NOTIFY_ID = 1002;
-    private NotificationUtils mNotificationUtils;
+
     Intent intent;
     PendingIntent pendingIntent;
 
@@ -72,7 +71,7 @@ public class RecorderScreenService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mNotificationUtils = new NotificationUtils(this);
+
 //        Intent intent =new Intent(getApplicationContext(),FloatingViewService.class);
 //        stopService(intent);
 //        init();

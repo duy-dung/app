@@ -1,12 +1,12 @@
 package com.example.admin.myapplication.service;
 
 import android.annotation.TargetApi;
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,11 +21,11 @@ import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Display;
@@ -39,22 +39,25 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 
 
 import com.example.admin.myapplication.MainActivity;
+
 import com.example.admin.myapplication.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class FloatingViewService extends Service  implements SurfaceHolder.Callback  {
+public class FloatingViewService extends Service  {
     //https://stackoverflow.com/questions/15049041/background-video-recording-in-android-4-0
+    private static final String BASE = "com.example.admin.myapplication.service.FloatingViewService.";
+    private VirtualDisplay mVirtualDisplay;
+    public static final String EXTRA_RESULT_CODE = BASE + "EXTRA_RESULT_CODE";
 
-    private MediaProjectionCallback mMediaProjectionCallback;
+
     private WindowManager mWindowManager;
     private FloatingActionButton btn0,btn1,btn2,btn3;
     private View mFloatingView;
@@ -67,20 +70,20 @@ public class FloatingViewService extends Service  implements SurfaceHolder.Callb
     private static final int DISPLAY_WIDTH = 720;
     private static final int DISPLAY_HEIGHT = 1280;
     private MediaProjection mMediaProjection;
-    private VirtualDisplay mVirtualDisplay;
+
     private MediaRecorder mMediaRecorder;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_PERMISSIONS = 10;
     private NotificationManager notifManager = null;
     final int NOTIFY_ID = 1002;
     Intent intent;
+    Intent intent12;
     PendingIntent pendingIntent;
+    private MediaProjectionManager getmProjectionManager;
 
 
     private WindowManager windowManager;
-    private SurfaceView surfaceView;
-    private Camera camera = null;
-    private MediaRecorder mediaRecorder = null;
+
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -100,9 +103,8 @@ public class FloatingViewService extends Service  implements SurfaceHolder.Callb
     @Override
     public void onCreate() {
         super.onCreate();
-        mMediaProjectionCallback = new MediaProjectionCallback();
-        mProjectionManager = (MediaProjectionManager) getSystemService
-                (Context.MEDIA_PROJECTION_SERVICE);
+
+        mProjectionManager =  (MediaProjectionManager)getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         //Inflate the floating view layout we created
 //        mMediaProjection.registerCallback(mMediaProjectionCallback, null);
         setTheme(R.style.AppTheme);
@@ -184,17 +186,14 @@ public class FloatingViewService extends Service  implements SurfaceHolder.Callb
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                stopSelf();
+            stopScreenSharing();
+//                stopSelf();
             }
         });
         btn3.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View v) {
-                mWindowManager.removeView(mFloatingView);
-                mMediaRecorder = new MediaRecorder();
+//                mWindowManager.removeView(mFloatingView);
 //                initRecorder();
                 startRecord();
             }
@@ -258,65 +257,19 @@ public class FloatingViewService extends Service  implements SurfaceHolder.Callb
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void startRecord() {
-        init();
-        Notification notification = new Notification.Builder(this)
-                .setContentTitle("Background Video Recorder")
-                .setContentText("")
-                .setSmallIcon(R.drawable.fab_add)
-                .build();
-        startForeground(1234, notification);
-
-        // Create new SurfaceView, set its size to 1x1, move it to the top left corner and set this service as a callback
-        windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        surfaceView = new SurfaceView(this);
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
-                1, 1,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                PixelFormat.TRANSLUCENT
-        );
-        layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
-        windowManager.addView(surfaceView, layoutParams);
-        surfaceView.getHolder().addCallback(this);
-    }
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-
-        camera = Camera.open();
-        mediaRecorder = new MediaRecorder();
-        camera.unlock();
-
-        mediaRecorder.setPreviewDisplay(surfaceHolder.getSurface());
-        mediaRecorder.setCamera(camera);
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
-
-        mediaRecorder.setOutputFile(
-                Environment.getExternalStorageDirectory()+"/"+
-                        DateFormat.format("yyyy-MM-dd_kk-mm-ss", new Date().getTime())+
-                        ".mp4"
-        );
-
-        try { mediaRecorder.prepare(); } catch (Exception e) {}
-        mediaRecorder.start();
-
+        initNotification();
+        initRecorder();
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        intent12 = intent;
+        return super.onStartCommand(intent, flags, startId);
     }
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-
-    }
-
-
-    private void init() {
+    private void initNotification() {
 
         // There are hardcoding only for show it's just strings
         String name = "my_package_channel";
@@ -382,23 +335,23 @@ public class FloatingViewService extends Service  implements SurfaceHolder.Callb
         Notification notification = builder.build();
 //        notification.flags = Notification.FLAG_AUTO_CANCEL;
         notifManager.notify(NOTIFY_ID, notification);
-        new Runnable() {
-            @Override
-            public void run() {
-
-                long t =0;
-                do {
-                    try {
-                        Thread.sleep(1000);
-                        updateNoti(t);
-                        t +=1000;
-                        Log.d(TAG, "run: 111111111");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }while (true);
-            }
-        }.run();
+//        new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                long t =0;
+//                do {
+//                    try {
+//                        Thread.sleep(1000);
+//                        updateNoti(t);
+//                        t +=1000;
+//                        Log.d(TAG, "run: 111111111");
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }while (true);
+//            }
+//        }.run();
     }
     private void updateNoti(long sec) {
         String name = "my_package_channel";
@@ -432,64 +385,55 @@ public class FloatingViewService extends Service  implements SurfaceHolder.Callb
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initRecorder() {
         try {
+            mMediaRecorder = new MediaRecorder();
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mMediaRecorder.setOutputFile(Environment
-                    .getExternalStoragePublicDirectory(Environment
-                            .DIRECTORY_DOWNLOADS) + "/video.mp4");
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
+            mMediaRecorder.setAudioEncodingBitRate(7* 1000);
             mMediaRecorder.setVideoFrameRate(30);
+            mMediaRecorder.setOutputFile(Environment
+                    .getExternalStoragePublicDirectory(Environment
+                            .DIRECTORY_DOWNLOADS) + "/video.mp4");
             WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
             int rotation = window.getDefaultDisplay().getRotation();
             int orientation = ORIENTATIONS.get(rotation + 90);
             mMediaRecorder.setOrientationHint(orientation);
             mMediaRecorder.prepare();
-        } catch (IOException e) {
+            mMediaRecorder.start();
+//            final int resultCode = intent12.getIntExtra(EXTRA_RESULT_CODE, 0);
+//            mMediaProjection = mProjectionManager.getMediaProjection(resultCode, intent12);
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            int mDensityDpi = metrics.densityDpi;
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private class MediaProjectionCallback extends MediaProjection.Callback {
-        @Override
-        public void onStop() {
 
-            mMediaRecorder.stop();
-            mMediaRecorder.reset();
-            mMediaProjection = null;
-            stopScreenSharing();
-        }
-    }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void stopScreenSharing() {
-        if (mVirtualDisplay == null) {
-            return;
-        }
         mVirtualDisplay.release();
-        //mMediaRecorder.release(); //If used: mMediaRecorder object cannot
-        // be reused again
-        destroyMediaProjection();
+        try{
+            mMediaRecorder.stop();
+        }catch(RuntimeException stopException){
+            //handle cleanup here
+        }
+
+//        destroyMediaProjection();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void destroyMediaProjection() {
-        if (mMediaProjection != null) {
-            mMediaProjection.unregisterCallback(mMediaProjectionCallback);
-            mMediaProjection.stop();
-            mMediaProjection = null;
-        }
-        Log.i(TAG, "MediaProjection Stopped");
-    }
+
 
 
     /**
@@ -503,15 +447,10 @@ public class FloatingViewService extends Service  implements SurfaceHolder.Callb
     public void onDestroy() {
         super.onDestroy();
         if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
-        mediaRecorder.stop();
-        mediaRecorder.reset();
-        mediaRecorder.release();
 
-        camera.lock();
-        camera.release();
 
-        windowManager.removeView(surfaceView);
     }
+
 
 }
 
