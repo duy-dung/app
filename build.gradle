@@ -30,8 +30,13 @@ dependencies {
     //
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //
-    implementation 'com.github.clans:fab:1.6.4'
-    //picasso
-    implementation 'com.facebook.fresco:fresco:1.9.0'
-    implementation 'com.android.support:cardview-v7:27.1.0'
+
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.4'
+    //
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    //
+    implementation 'com.ss.bannerslider:bannerslider:2.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

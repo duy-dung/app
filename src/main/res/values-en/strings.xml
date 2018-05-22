@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Screen Recorder &amp; Screenshot</string>
+    <string name="label_permissions">Please enable Microphone and Storage permissions.1</string>
+    <string name="xacnhan">Xác nhận1</string>
+    <string name="mess_xacnhan">Bạn có chắc chắn muốn xóa video này?1</string>
+    <string name="ok">Đồng ý1</string>
+    <string name="cancel">Hủy1</string>
+    <string name="cham_de_dung">Chạm để dừng quay1</string>
+    <string name="dangquay">Đang quay1</string>
+    <string name="chiasevoi">Chia sẻ với1</string>
+    <string name="xoa">Xóa1</string>
+    <string name="chiase">Chia sẻ1</string>
+    <string name="dachup">Đã chụp1</string>
+    <string name="tocdoquay">Tốc độ quay :1</string>
+    <string name="thoigiancho">Thời gian chờ :1</string>
+    <string name="chatluongvideo">Chất lượng video :1</string>
+    <string name="nguonamthanh">Nguồn âm thanh :1</string>
+    <string name="tiengviet">Tiếng việt1</string>
+    <string name="english">English</string>
+    <string name="dongy">Lưu lại1</string>
+</resources>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+ <LinearLayout
+     android:orientation="horizontal"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content">
+     <ImageView
+         android:padding="7dp"
+         android:src="@drawable/ic_launcher"
+         android:layout_width="60dp"
+         android:layout_height="60dp" />
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:id="@+id/tvName"
+         android:textSize="17sp"
+         android:layout_gravity="center_vertical"
+         android:text="@string/app_name"
+         android:textColor="@color/colorAccent"
+         android:padding="10dp"
+         android:lines="1"
+         />
+
+ </LinearLayout>
+
+    <RelativeLayout
+       android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_stop"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_stop_recoder" />
+
+        <ImageView
+            android:id="@+id/img_Open"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/img_stop"
+            android:src="@drawable/ic_stop_open" />
+
+        <ImageView
+            android:id="@+id/img_Restart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/img_stop"
+            android:src="@drawable/ic_continue" />
+
+    </RelativeLayout>
+</LinearLayout>

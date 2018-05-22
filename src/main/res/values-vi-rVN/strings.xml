@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Screen Recorder &amp; Screenshot</string>
+    <string name="label_permissions">Please enable Microphone and Storage permissions.</string>
+    <string name="xacnhan">Xác nhận</string>
+    <string name="mess_xacnhan">Bạn có chắc chắn muốn xóa video này?</string>
+    <string name="ok">Đồng ý</string>
+    <string name="cancel">Hủy</string>
+    <string name="cham_de_dung">Chạm để dừng quay</string>
+    <string name="dangquay">Đang quay</string>
+    <string name="chiasevoi">Chia sẻ với</string>
+    <string name="xoa">Xóa</string>
+    <string name="chiase">Chia sẻ</string>
+    <string name="dachup">Đã chụp</string>
+    <string name="tocdoquay">Tốc độ quay :</string>
+    <string name="thoigiancho">Thời gian chờ :</string>
+    <string name="chatluongvideo">Chất lượng video :</string>
+    <string name="nguonamthanh">Nguồn âm thanh :</string>
+    <string name="tiengviet">Tiếng việt</string>
+    <string name="english">English</string>
+    <string name="dongy">Lưu lại</string>
+</resources>

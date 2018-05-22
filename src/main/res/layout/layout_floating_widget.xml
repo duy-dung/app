@@ -20,66 +20,85 @@
 
             <!--Icon of floating widget -->
             <android.support.design.widget.FloatingActionButton
-                android:accessibilityTraversalBefore="@id/root_container"
-                android:id="@+id/btn_0"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:elevation="6dp"
-                app:layout_constraintStart_toEndOf="@+id/btn_2"
-                app:layout_constraintTop_toBottomOf="@+id/btn_3"
-                android:src="@drawable/ic_android_circle"
-                tools:ignore="MissingConstraints"
-                />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/btn_1"
+                android:id="@+id/btn_exit"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                app:backgroundTint="#ffff"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                app:backgroundTint="@android:color/transparent"
                 android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_0"
+                app:layout_constraintVertical_bias="0.0"
                 android:src="@drawable/ic_open"
+                 />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_0"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                app:backgroundTint="@android:color/transparent"
+                android:layout_marginTop="8dp"
+                android:accessibilityTraversalBefore="@id/root_container"
+                android:elevation="6dp"
+                android:src="@drawable/ic_action"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_3"
                 tools:ignore="MissingConstraints" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_1"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginBottom="29dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_home"
+                app:backgroundTint="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_exit"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_2" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/btn_3"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                app:backgroundTint="#ffff"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
                 android:layout_marginTop="8dp"
+                app:backgroundTint="@android:color/transparent"
+                android:src="@drawable/ic_recoder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/icons8_play"
                 tools:ignore="MissingConstraints" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/btn_2"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
-                app:backgroundTint="#ffff"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_0"
+                app:backgroundTint="@android:color/transparent"
+                android:layout_marginTop="29dp"
+                app:layout_constraintEnd_toStartOf="@+id/btn_3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btn_0"
-                app:srcCompat="@drawable/ic_close_black_24dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_snap"
                 tools:ignore="MissingConstraints,VectorDrawableCompat" />
 
 
             <!--View while view is expanded-->
         </android.support.constraint.ConstraintLayout>
+
 </FrameLayout>

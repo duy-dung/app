@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:padding="10dp"
+                android:src="@drawable/ic_speed"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="@string/tocdoquay"
+                android:textSize="17sp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="150dp"
+                android:layout_gravity="left|center"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/spn_tdq"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:padding="10dp"
+                android:src="@drawable/ic_time"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="@string/thoigiancho"
+                android:textSize="17sp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="150dp"
+                android:layout_gravity="left|center"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/spn_tgc"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:padding="10dp"
+                android:src="@drawable/ic_video_quality"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="@string/chatluongvideo"
+                android:textSize="17sp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="left|center"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/spn_clvd"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:padding="10dp"
+                android:src="@drawable/ic_sound"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="@string/nguonamthanh"
+                android:textSize="17sp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/spn_nat"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+            <ImageView
+                android:padding="10dp"
+                android:src="@drawable/ic_language"
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="@string/ngonngu"
+                android:textSize="17sp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/spn_nn"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/btn_save"
+        android:background="#CB3177"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:src="@drawable/ic_save"
+                android:layout_width="50dp"
+                android:layout_height="40dp" />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="#CB3177"
+                android:text="@string/dongy"
+                android:textColor="@color/wi" />
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

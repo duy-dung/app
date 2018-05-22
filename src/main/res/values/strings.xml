@@ -1,4 +1,47 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Screen Recorder &amp; Screenshot</string>
     <string name="label_permissions">Please enable Microphone and Storage permissions.</string>
+    <string name="xacnhan">Xác nhận</string>
+    <string name="mess_xacnhan">Bạn có chắc chắn muốn xóa video này?</string>
+    <string name="ok">Đồng ý</string>
+    <string name="cancel">Hủy</string>
+    <string name="cham_de_dung">Chạm để dừng quay</string>
+    <string name="dangquay">Đang quay</string>
+    <string name="chiasevoi">Chia sẻ với</string>
+    <string name="xoa">Xóa</string>
+    <string name="chiase">Chia sẻ</string>
+    <string name="dachup">Đã chụp</string>
+    <string name="tocdoquay">Tốc độ quay :</string>
+    <string name="thoigiancho">Thời gian chờ :</string>
+    <string name="chatluongvideo">Chất lượng video :</string>
+    <string name="nguonamthanh">Nguồn âm thanh :</string>
+    <string name="tiengviet">Tiếng việt</string>
+    <string name="english">English</string>
+    <string name="dongy">Lưu lại</string>
+    <string name="ngonngu">Ngôn ngữ:</string>
+    <string name="daluu">Đã lưu</string>
+    <array name="nn">
+        <item>Tiếng việt</item>
+        <item>Tiếng anh</item>
+
+    </array>
+    <array name="tdq">
+        <item>30 fps</item>
+        <item>60 fps</item>
+        <item>90 fps</item>
+    </array>
+    <array name="tgc">
+        <item>3 giây</item>
+        <item>4 giây</item>
+        <item>5 giây</item>
+        <item>6 giây</item>
+    </array>
+    <array name="nat">
+        <item>Từ mic</item>
+        <item>Từ ứng dụng</item>
+    </array>
+    <array name="cl">
+        <item>720p</item>
+        <item>1080p</item>
+    </array>
 </resources>
