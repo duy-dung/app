@@ -15,6 +15,7 @@ import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
+import android.media.CamcorderProfile;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaRecorder;
@@ -27,8 +28,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Display;
@@ -40,6 +43,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -106,15 +110,7 @@ public class FloatingViewService extends Service {
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
-    private final IMyAidlRecoder.Stub myAidlRecoder = new IMyAidlRecoder.Stub() {
-        @Override
-        public void Stop() throws RemoteException {
-            mMediaRecorder.stop();
-            mMediaRecorder.release();
-            mMediaRecorder.reset();
-            if (mVirtualDisplay != null) mVirtualDisplay.release();
-        }
-    };
+
     private String id = "zzz";
     private CharSequence name = "z";
 
@@ -128,7 +124,7 @@ public class FloatingViewService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        myPerferences =new MyPerferences(getApplicationContext());
+        myPerferences = new MyPerferences(getApplicationContext());
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_OPEN);
         filter.addAction(ACTION_STOP);
@@ -140,7 +136,6 @@ public class FloatingViewService extends Service {
 
         setTheme(R.style.AppTheme);
 
-        showView();
     }
 
     private void showView() {
@@ -241,23 +236,24 @@ public class FloatingViewService extends Service {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                int time =myPerferences.getSetting().getTgc()+3;
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_wait, null);
-                final TextView tvTime = view.findViewById(R.id.tv_time);
+                btnRecoder.setClickable(false);
+                int time = myPerferences.getSetting().getTgc() + 3;
+                final ConstraintLayout viewCountDown = (ConstraintLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_wait, null);
+                final TextView tvTime = viewCountDown.findViewById(R.id.tv_time);
                 int LAYOUT_FLAG;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
                 } else {
-                    LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+                    LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
                 }
                 WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                         WindowManager.LayoutParams.WRAP_CONTENT,
                         WindowManager.LayoutParams.WRAP_CONTENT,
                         LAYOUT_FLAG,
                         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                        PixelFormat.TRANSLUCENT);
-                mWindowManager.addView(view, params);
-                new CountDownTimer(time*1000, 1000) {
+                        PixelFormat.TRANSPARENT);
+                mWindowManager.addView(viewCountDown, params);
+                new CountDownTimer(time * 1000, 1000) {
 
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -267,10 +263,12 @@ public class FloatingViewService extends Service {
 
                     @Override
                     public void onFinish() {
+                        btnRecoder.setClickable(true);
+                        mWindowManager.removeView(viewCountDown);
                         startRecord();
-                        mWindowManager.removeView(view);
                     }
                 }.start();
+
             }
 
         });
@@ -379,13 +377,18 @@ public class FloatingViewService extends Service {
                 (Intent) intent.getParcelableExtra(EXTRA_RESULT_INTENT));
 
         initNotification();
+
         initRecorder();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private VirtualDisplay createVirtualDisplay() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        mWindowManager.getDefaultDisplay().getMetrics(metrics);
+        int screenDensity = metrics.densityDpi;
         return mMediaProjection.createVirtualDisplay("FloatingViewService",
-                display.getWidth(), display.getHeight(), 900,
+                display.getWidth(), display.getHeight(), screenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC,
                 mMediaRecorder.getSurface(), null /*Callbacks*/, null
                 /*Handler*/);
@@ -393,8 +396,11 @@ public class FloatingViewService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private VirtualDisplay createVirtualDisplayS() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        mWindowManager.getDefaultDisplay().getMetrics(metrics);
+        int screenDensity = metrics.densityDpi;
         return mMediaProjection.createVirtualDisplay("FloatingViewService",
-                display.getWidth(), display.getHeight(), 900,
+                display.getWidth(), display.getHeight(), screenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC,
                 mImageReader.getSurface(), null /*Callbacks*/, null
                 /*Handler*/);
@@ -405,6 +411,7 @@ public class FloatingViewService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         this.intent = intent;
+        showView();
         return START_NOT_STICKY;
     }
 
@@ -434,12 +441,12 @@ public class FloatingViewService extends Service {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel mChannel = notifManager.getNotificationChannel(id);
             if (mChannel == null) {
                 mChannel = new NotificationChannel(id, name, importance);
                 mChannel.enableVibration(true);
-                mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                mChannel.setVibrationPattern(new long[]{300, 400, 500});
                 notifManager.createNotificationChannel(mChannel);
             }
             builder = new NotificationCompat.Builder(getApplicationContext(), id);
@@ -457,16 +464,16 @@ public class FloatingViewService extends Service {
 //                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         } else {
 
-            builder.setContentTitle("zzz23")                           // required
+            builder.setContentTitle(getResources().getString(R.string.dangquay))                           // required
                     .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
                     .setContentText(getApplication().getString(R.string.app_name))  // required
-
                     .setCustomBigContentView(remoteViews)
+                    .setCustomContentView(remoteViews)
                     .setOngoing(true)
                     .setAutoCancel(false)
                     .setTicker("zzzzzzccccccc")
 //                    .setContent(bigView)
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                    .setVibrate(new long[]{300, 400, 500})
                     .setPriority(Notification.PRIORITY_DEFAULT);
         }
 
@@ -475,13 +482,12 @@ public class FloatingViewService extends Service {
         }
 
 
-
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initRecorder() {
-        SettingParam  param =myPerferences.getSetting();
+        SettingParam param = myPerferences.getSetting();
         java.text.DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss" +
                 "");
         Date date = new Date();
@@ -489,25 +495,51 @@ public class FloatingViewService extends Service {
         mMediaRecorder = new MediaRecorder();
         if (param.getNat() == 0) {
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        }else {
+        } else {
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
         }
+
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mMediaRecorder.setVideoSize(display.getWidth(), display.getHeight());
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
+//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+//        mMediaRecorder.setVideoSize(display.getWidth(), display.getHeight());
+//        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+//        mMediaRecorder.setMaxDuration(5000);
+//        mMediaRecorder.setAudioChannels(1);
+//        mMediaRecorder.setAudioSamplingRate(8000);
 
-        mMediaRecorder.setOutputFile(Environment
+        CamcorderProfile cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        mMediaRecorder.setProfile(cpHigh);
+
+        int cl = param.getCl();
+        if (cl == 0) {
+            mMediaRecorder.setVideoEncodingBitRate(300000);
+        } else if (cl == 1) {
+            mMediaRecorder.setVideoEncodingBitRate(1500000);
+        } else {
+            mMediaRecorder.setVideoEncodingBitRate(3000000);
+        }
+        mMediaRecorder.setAudioEncodingBitRate(13 * 1000);
+        File path =  new File(Environment
                 .getExternalStoragePublicDirectory(Environment
-                        .DIRECTORY_DOWNLOADS) + "/" + title + ".mp4");
-        int fps ;
+                        .DIRECTORY_DOWNLOADS)+"/video/");
+        path.mkdirs();
+        try {
+            File video =File.createTempFile(title,".mp4",path);
+            mMediaRecorder.setOutputFile(video.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        int fps;
         if (param.getTdq() == 0) {
-            fps=30;
+            fps = 10;
         } else if (param.getTdq() == 1) {
-            fps = 60;
-        }else fps =90;
+            fps = 20;
+        } else fps = 30;
         mMediaRecorder.setVideoFrameRate(fps);
         int rotation = window.getDefaultDisplay().getRotation();
         int orientation = ORIENTATIONS.get(rotation + 90);
@@ -515,15 +547,19 @@ public class FloatingViewService extends Service {
         mMediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
             @Override
             public void onError(MediaRecorder mr, int what, int extra) {
-                System.out.println("wwwwwwww"+what+"zzzzzzzzzzzzzzzzzzzzzz"+extra);
+                System.out.println("wwwwwwww" + what + "zzzzzzzzzzzzzzzzzzzzzz" + extra);
             }
         });
 
         try {
             mMediaRecorder.prepare();
             mMediaRecorder.start();
+        } catch (IllegalStateException e) {
+            throw new RuntimeException(
+                    "IllegalStateException on MediaRecorder.prepare", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(
+                    "IOException on MediaRecorder.prepare", e);
         }
 
         mVirtualDisplay = createVirtualDisplay();
@@ -532,14 +568,16 @@ public class FloatingViewService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void stopScreenSharing() {
-        mMediaRecorder.stop();
+        try {
+            mMediaRecorder.stop();
+        } catch (Exception e) {
+
+        }
         mMediaRecorder.reset();
         mMediaRecorder.release();
         mProjectionManager = null;
         mMediaProjection.stop();
-
         mVirtualDisplay.release();
-
 
     }
 

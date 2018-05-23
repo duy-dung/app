@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS = 10;
     private MediaProjectionManager mgr;
     public static int OVERLAY_PERMISSION_REQ_CODE = 1234;
-    public static boolean isOpen= false;
+
 
 
     private MediaProjectionManager mediaProjectionManager;
@@ -49,7 +49,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.SYSTEM_ALERT_WINDOW};
 
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
         mgr = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
 
         MyPerferences myPerferences = new MyPerferences(this);
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 intent1.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent1);
+                finish();
             } else {
                 init();
                 startActivityForResult(mgr.createScreenCaptureIntent(),
@@ -78,6 +84,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -173,21 +189,13 @@ public class MainActivity extends AppCompatActivity {
                                 .putExtra(FloatingViewService.EXTRA_RESULT_INTENT,
                                         data);
 
-                startService(i);
-                finish();
+                startService(i);finish();
+
             }
         }
 
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isOpen) {
-            finish();
-        }
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -201,32 +209,32 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-//        switch (requestCode) {
-//            case REQUEST_PERMISSIONS: {
-//                if ((grantResults.length > 0) && (grantResults[0] +
-//                        grantResults[1]) == PackageManager.PERMISSION_GRANTED) {
-//
-//                } else {
-//
-//                    Snackbar.make(findViewById(android.R.id.content), R.string.label_permissions,
-//                            Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
-//                            new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    Intent intent = new Intent();
-//                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-//                                    intent.setData(Uri.parse("package:" + getPackageName()));
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//                                    startActivity(intent);
-//                                }
-//                            }).show();
-//                }
-//                return;
-//            }
-//        }
+        switch (requestCode) {
+            case REQUEST_PERMISSIONS: {
+                if ((grantResults.length > 0) && (grantResults[0] +
+                        grantResults[1]) == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                    Snackbar.make(findViewById(android.R.id.content), R.string.label_permissions,
+                            Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                    intent.setData(Uri.parse("package:" + getPackageName()));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                                    startActivity(intent);
+                                }
+                            }).show();
+                }
+                return;
+            }
+        }
     }
 
     @Override

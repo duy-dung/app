@@ -29,6 +29,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.admin.myapplication.MainActivity;
 import com.example.admin.myapplication.R;
 import com.example.admin.myapplication.service.FloatingViewService;
 
@@ -73,8 +74,8 @@ public class FragmentListImage extends Fragment implements ListImageContract.Vie
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), FloatingViewService.class);
-                getActivity().startService(intent);
+                Intent intent =new Intent(getContext(), MainActivity.class);
+                getActivity().startActivity(intent);
                 getActivity().finish();
             }
         });
@@ -88,24 +89,11 @@ public class FragmentListImage extends Fragment implements ListImageContract.Vie
             mAdapter.registerListerner(new ListImageAdapter.OnItemClickListener() {
                 @Override
                 public void reviewImage(int i) {
-
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.setDataAndType(Uri.parse(mList.get(i)), "image/png");
-//
-//                    startActivity(Intent.createChooser(intent,"zz"));
-//                    File file=new File(mList.get(i));
-//                    String agendaFilename = file.getAbsolutePath();
-//
-//                    final ContentValues values = new ContentValues(2);
-//                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-//                    values.put(MediaStore.Images.Media.DATA, agendaFilename);
-//                    final Uri contentUriFile = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//                    final Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    intent.setType("image/png");
-//                    intent.putExtra(android.content.Intent.EXTRA_STREAM, contentUriFile);
-//                    startActivity(Intent.createChooser(intent, "title"));
+                    File file =new File(mList.get(i));
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(file), "image/*");
+                    startActivity(intent);
                 }
 
                 @Override

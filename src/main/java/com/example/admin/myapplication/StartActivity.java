@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -44,12 +45,13 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onSlideClick(int position) {
                 if (position == 2) {
+                    checkPermission();
                     if (ContextCompat.checkSelfPermission(StartActivity.this,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE) + ContextCompat
                             .checkSelfPermission(StartActivity.this,
                                     Manifest.permission.RECORD_AUDIO)
                             != PackageManager.PERMISSION_GRANTED) {
-                        checkPermission();
+
                     } else {
                         MyPerferences myPerferences =new MyPerferences(getApplicationContext());
                         myPerferences.setFrist(false);
@@ -94,6 +96,7 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (!Settings.canDrawOverlays(StartActivity.this)) {
@@ -127,7 +130,7 @@ public class StartActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 ActivityCompat.requestPermissions(StartActivity.this,
                                         new String[]{Manifest.permission
-                                                .WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO},
+                                                .WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO,Manifest.permission.RECORD_AUDIO},
                                         REQUEST_PERMISSIONS);
                             }
                         }).show();

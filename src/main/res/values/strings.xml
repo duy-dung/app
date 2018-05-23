@@ -20,6 +20,8 @@
     <string name="dongy">Lưu lại</string>
     <string name="ngonngu">Ngôn ngữ:</string>
     <string name="daluu">Đã lưu</string>
+    <string name="xemvoi">Xem với</string>
+    <string name="confirm_close">Nhấm lần nữa để thoát.</string>
     <array name="nn">
         <item>Tiếng việt</item>
         <item>Tiếng anh</item>
@@ -41,7 +43,8 @@
         <item>Từ ứng dụng</item>
     </array>
     <array name="cl">
-        <item>720p</item>
-        <item>1080p</item>
+        <item>Thấp</item>
+        <item>Trung bình</item>
+        <item>Cao</item>
     </array>
 </resources>

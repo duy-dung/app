@@ -49,6 +49,7 @@ public class ListActivity extends AppCompatActivity {
     public static int OVERLAY_PERMISSION_REQ_CODE = 1234;
 
 
+    private boolean checkClose =false;
 
 
 
@@ -141,15 +142,7 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init() {
@@ -239,8 +232,12 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-        MainActivity.isOpen = true;
+        if (checkClose) {
+            this.finish();
+        }else {
+            checkClose = true;
+            Toast.makeText(this, getResources().getString(R.string.confirm_close), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
