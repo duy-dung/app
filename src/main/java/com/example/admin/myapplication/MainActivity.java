@@ -21,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MediaProjectionManager mediaProjectionManager;
     private int REQUEST_SCREENSHOT = 2321;
+    private int REQUEST_CODE=3;
+    private static final int REQUEST_WRITE_STORAGE = 112;
 
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -49,12 +52,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        int PERMISSION_ALL = 1;
-        String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.SYSTEM_ALERT_WINDOW};
-
-        if(!hasPermissions(this, PERMISSIONS)){
-            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-        }
         mgr = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
 
         MyPerferences myPerferences = new MyPerferences(this);
@@ -209,6 +206,20 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode)
+        {
+            case REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    //reload my activity with permission granted or use the features what required the permission
+                } else
+                {
+                    Toast.makeText(this, "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
         switch (requestCode) {
             case REQUEST_PERMISSIONS: {
                 if ((grantResults.length > 0) && (grantResults[0] +

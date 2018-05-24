@@ -1,6 +1,7 @@
 package com.example.admin.myapplication.service;
 
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
@@ -26,11 +28,13 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -487,63 +491,99 @@ public class FloatingViewService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initRecorder() {
+
+
         SettingParam param = myPerferences.getSetting();
-        java.text.DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss" +
-                "");
+        java.text.DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
         Date date = new Date();
         String title = dateFormat.format(date);
         mMediaRecorder = new MediaRecorder();
-        if (param.getNat() == 0) {
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        Point size = new Point();
+        display.getSize(size);
+
+//        if (param.getNat() == 0) {
+//            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        } else {
+//            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
+//        }
+//
+//        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+
+        if (Build.VERSION.SDK_INT <= 23) {
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mMediaRecorder.setAudioEncodingBitRate(8000);
+            mMediaRecorder.setAudioSamplingRate(8000);
+
+            mMediaRecorder.setVideoSize(size.x, size.y);
+//            CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+//
+//            profile.videoFrameWidth = size.x;
+//            profile.videoFrameHeight = size.y;
+//            mMediaRecorder.setProfile(profile);
+            if (Build.VERSION.SDK_INT <= 23) {
+                File path = new File(Environment
+                        .getExternalStoragePublicDirectory(Environment
+                                .DIRECTORY_DOWNLOADS) + "/video/");
+                path.mkdirs();
+                try {
+                    File video = File.createTempFile(title, ".3gp", path);
+                    mMediaRecorder.setOutputFile(video.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else {
+                File path = new File(Environment
+                        .getExternalStoragePublicDirectory(Environment
+                                .DIRECTORY_DOWNLOADS) + "/video/");
+                path.mkdirs();
+                try {
+                    File video = File.createTempFile(title, ".mp4", path);
+                    mMediaRecorder.setOutputFile(video.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (IllegalStateException e){
+                    Log.e("zzz", "initRecorder: "+e.toString());
+                }
+
+            }
+
         } else {
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mMediaRecorder.setVideoSize(size.x, size.y);
+            mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
         }
-
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-
-//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-//        mMediaRecorder.setVideoSize(display.getWidth(), display.getHeight());
-//        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-//        mMediaRecorder.setMaxDuration(5000);
-//        mMediaRecorder.setAudioChannels(1);
-//        mMediaRecorder.setAudioSamplingRate(8000);
-
-        CamcorderProfile cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
-        mMediaRecorder.setProfile(cpHigh);
-
-        int cl = param.getCl();
-        if (cl == 0) {
-            mMediaRecorder.setVideoEncodingBitRate(300000);
-        } else if (cl == 1) {
-            mMediaRecorder.setVideoEncodingBitRate(1500000);
-        } else {
-            mMediaRecorder.setVideoEncodingBitRate(3000000);
-        }
-        mMediaRecorder.setAudioEncodingBitRate(13 * 1000);
-        File path =  new File(Environment
-                .getExternalStoragePublicDirectory(Environment
-                        .DIRECTORY_DOWNLOADS)+"/video/");
-        path.mkdirs();
-        try {
-            File video =File.createTempFile(title,".mp4",path);
-            mMediaRecorder.setOutputFile(video.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
         int fps;
         if (param.getTdq() == 0) {
-            fps = 10;
+            fps = 30;
         } else if (param.getTdq() == 1) {
-            fps = 20;
+            fps = 30;
         } else fps = 30;
         mMediaRecorder.setVideoFrameRate(fps);
         int rotation = window.getDefaultDisplay().getRotation();
         int orientation = ORIENTATIONS.get(rotation + 90);
         mMediaRecorder.setOrientationHint(orientation);
+
+        int cl = param.getCl();
+        if (cl == 0) {
+            mMediaRecorder.setVideoEncodingBitRate(3000000);
+        } else if (cl == 1) {
+            mMediaRecorder.setVideoEncodingBitRate(3000000);
+        } else {
+            mMediaRecorder.setVideoEncodingBitRate(3000000);
+        }
+
+
+
+//
+
         mMediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
             @Override
             public void onError(MediaRecorder mr, int what, int extra) {
@@ -555,24 +595,35 @@ public class FloatingViewService extends Service {
             mMediaRecorder.prepare();
             mMediaRecorder.start();
         } catch (IllegalStateException e) {
-            throw new RuntimeException(
-                    "IllegalStateException on MediaRecorder.prepare", e);
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    "IOException on MediaRecorder.prepare", e);
+            System.out.println(e.getCause());
+//            releaseMediaRecorder();
+        }catch ( IOException e){;
+            System.out.println("zzzzzzz"+e.getMessage());
+//            releaseMediaRecorder();
+        }catch (Exception r){
+
         }
 
         mVirtualDisplay = createVirtualDisplay();
+    }
+    private void releaseMediaRecorder(){
+        if (mMediaRecorder != null) {
+            // clear recorder configuration
+            mMediaRecorder.reset();
+            // release the recorder object
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+            // Lock camera for later use i.e taking it back from MediaRecorder.
+            // MediaRecorder doesn't need it anymore and we will release it if the activity pauses.
+
+        }
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void stopScreenSharing() {
-        try {
-            mMediaRecorder.stop();
-        } catch (Exception e) {
 
-        }
+        mMediaRecorder.stop();
         mMediaRecorder.reset();
         mMediaRecorder.release();
         mProjectionManager = null;
@@ -705,6 +756,11 @@ public class FloatingViewService extends Service {
                 stopScreenSharing();
                 showView();
             } else if (action.equals(ACTION_RESTART)) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 stopScreenSharing();
                 showView();
 

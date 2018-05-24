@@ -28,7 +28,7 @@ public class ListVideoPresenter implements ListVideoContract.Presenter {
         List<VideoScreen> mList = new ArrayList<>();
         File directory = Environment
                 .getExternalStoragePublicDirectory(Environment
-                        .DIRECTORY_DOWNLOADS);
+                        .DIRECTORY_DOWNLOADS+"/video");
         File[] files = directory.listFiles();
 
 
