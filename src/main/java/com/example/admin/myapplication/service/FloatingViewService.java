@@ -501,17 +501,17 @@ public class FloatingViewService extends Service {
         Point size = new Point();
         display.getSize(size);
 
-//        if (param.getNat() == 0) {
-//            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-//        } else {
-//            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
-//        }
-//
-//        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        if (param.getNat() == 0) {
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        } else {
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
+        }
+
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
 
         if (Build.VERSION.SDK_INT <= 23) {
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+//            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+//            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
 
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
@@ -524,40 +524,40 @@ public class FloatingViewService extends Service {
 //
 //            profile.videoFrameWidth = size.x;
 //            profile.videoFrameHeight = size.y;
-//            mMediaRecorder.setProfile(profile);
-            if (Build.VERSION.SDK_INT <= 23) {
-                File path = new File(Environment
-                        .getExternalStoragePublicDirectory(Environment
-                                .DIRECTORY_DOWNLOADS) + "/video/");
-                path.mkdirs();
-                try {
-                    File video = File.createTempFile(title, ".3gp", path);
-                    mMediaRecorder.setOutputFile(video.getAbsolutePath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }else {
-                File path = new File(Environment
-                        .getExternalStoragePublicDirectory(Environment
-                                .DIRECTORY_DOWNLOADS) + "/video/");
-                path.mkdirs();
-                try {
-                    File video = File.createTempFile(title, ".mp4", path);
-                    mMediaRecorder.setOutputFile(video.getAbsolutePath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }catch (IllegalStateException e){
-                    Log.e("zzz", "initRecorder: "+e.toString());
-                }
-
-            }
+//            mMediaRecorder.setProfile(profile)
 
         } else {
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setVideoSize(size.x, size.y);
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mMediaRecorder.setVideoSize(size.x, size.y);
+        }
+        if (Build.VERSION.SDK_INT <= 23) {
+            File path = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment
+                            .DIRECTORY_DOWNLOADS) + "/video/");
+            path.mkdirs();
+            try {
+                File video = File.createTempFile(title, ".3gp", path);
+                mMediaRecorder.setOutputFile(video.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }else {
+            File path = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment
+                            .DIRECTORY_DOWNLOADS) + "/video/");
+            path.mkdirs();
+            try {
+                File video = File.createTempFile(title, ".mp4", path);
+                mMediaRecorder.setOutputFile(video.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }catch (IllegalStateException e){
+                Log.e("zzz", "initRecorder: "+e.toString());
+            }
 
         }
         int fps;
