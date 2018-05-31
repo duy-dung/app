@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.admin.myapplication.R;
 import com.example.admin.myapplication.model.VideoScreen;
 
@@ -57,9 +58,7 @@ public class ListVideoAdapter extends RecyclerView.Adapter<ListVideoAdapter.List
             holder.tvTitle.setText(videoScreen.getTitle().substring(11));
             holder.tvTime.setText(videoScreen.getTime());
             holder.tvDate.setText(videoScreen.getTitle().substring(0,10));
-            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoScreen.getPathFile(),
-                    MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
-            holder.simpleDraweeView.setImageBitmap(thumb);
+            Glide.with(mContext).load(videoScreen.getPathFile()).into(holder.simpleDraweeView);
         }
     }
 

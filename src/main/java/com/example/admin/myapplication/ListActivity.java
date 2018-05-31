@@ -146,8 +146,8 @@ public class ListActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init() {
-        mediaProjectionManager = (MediaProjectionManager) this.getSystemService(MEDIA_PROJECTION_SERVICE);
-        startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 1);
+//        mediaProjectionManager = (MediaProjectionManager) this.getSystemService(MEDIA_PROJECTION_SERVICE);
+//        startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 1);
 
         if (ContextCompat.checkSelfPermission(ListActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) + ContextCompat

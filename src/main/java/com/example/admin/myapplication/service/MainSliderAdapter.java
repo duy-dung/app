@@ -16,13 +16,13 @@ public class MainSliderAdapter extends SliderAdapter {
     public void onBindImageSlide(int position, ImageSlideViewHolder viewHolder) {
         switch (position) {
             case 0:
-                viewHolder.bindImageSlide(R.drawable.ic_android_circle);
+                viewHolder.bindImageSlide(R.drawable.ss_1);
                 break;
             case 1:
-                viewHolder.bindImageSlide(R.drawable.ic_close_black_24dp);
+                viewHolder.bindImageSlide(R.drawable.ss_2);
                 break;
             case 2:
-                viewHolder.bindImageSlide(R.drawable.music_player);
+                viewHolder.bindImageSlide(R.drawable.ss_3);
                 break;
         }
     }

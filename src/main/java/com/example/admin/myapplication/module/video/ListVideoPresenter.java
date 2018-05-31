@@ -29,34 +29,37 @@ public class ListVideoPresenter implements ListVideoContract.Presenter {
         File directory = Environment
                 .getExternalStoragePublicDirectory(Environment
                         .DIRECTORY_DOWNLOADS+"/video");
+        directory.mkdirs();
         File[] files = directory.listFiles();
 
-
-        for (int i = 0; i < files.length; i++)
-            try {
-                if (files[i].getName().endsWith(".mp4")) {
-                    VideoScreen videoScreen = new VideoScreen();
-                    Log.d("Files", "FileName:" + files[i].getName());
-                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        if (files!=null&&files.length > 0) {
+            for (int i = 0; i < files.length; i++)
+                try {
+                    if (files[i].getName().endsWith(".mp4")) {
+                        VideoScreen videoScreen = new VideoScreen();
+                        Log.d("Files", "FileName:" + files[i].getName());
+                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 //use one of overloaded setDataSource() functions to set your data source
-                    retriever.setDataSource(context, Uri.fromFile(files[i]));
-                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                    long timeInMillisec = Long.parseLong(time);
+                        retriever.setDataSource(context, Uri.fromFile(files[i]));
+                        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                        long timeInMillisec = Long.parseLong(time);
 //            retriever.release();
-                    videoScreen.setTitle(files[i].getName());
-                    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(timeInMillisec),
-                            TimeUnit.MILLISECONDS.toMinutes(timeInMillisec) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeInMillisec)),
-                            TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec)));
+                        videoScreen.setTitle(files[i].getName());
+                        String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(timeInMillisec),
+                                TimeUnit.MILLISECONDS.toMinutes(timeInMillisec) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeInMillisec)),
+                                TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec)));
 
-                    videoScreen.setTime(hms);
-                    videoScreen.setPathFile(files[i].getPath());
-                    mList.add(videoScreen);
-                    Log.d("Files", "getListfromLocal: " + hms);
+                        videoScreen.setTime(hms);
+                        videoScreen.setPathFile(files[i].getPath());
+                        mList.add(videoScreen);
+                        Log.d("Files", "getListfromLocal: " + hms);
+                    }
+
+                } catch (Exception e) {
+
                 }
+        }
 
-            } catch (Exception e) {
-
-            }
         return mList;
     }
 

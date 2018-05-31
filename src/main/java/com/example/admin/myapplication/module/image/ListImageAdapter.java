@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import com.bumptech.glide.Glide;
 import com.example.admin.myapplication.R;
 
 import java.io.File;
@@ -54,13 +55,8 @@ public class ListImageAdapter extends RecyclerView.Adapter<ListImageAdapter.List
     @Override
     public void onBindViewHolder(@NonNull ListVideoHolder holder, int position) {
         Log.d("zzzzzz", "onBindViewHolder: "+mList.get(position));
-        File imgFile = new  File(mList.get(position));
-        if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            //Drawable d = new BitmapDrawable(getResources(), myBitmap);
-            holder.img.setImageBitmap(myBitmap);
 
-        }
+            Glide.with(mContext).load(mList.get(position)).into(holder.img);
     }
 
 

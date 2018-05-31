@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent1);
                 finish();
             } else {
+                if ( ContextCompat.checkSelfPermission( this, Manifest.permission.READ_EXTERNAL_STORAGE ) == PackageManager.PERMISSION_GRANTED &&ContextCompat.checkSelfPermission( this, Manifest.permission.WRITE_EXTERNAL_STORAGE ) == PackageManager.PERMISSION_GRANTED ) {
+
+                    ActivityCompat.requestPermissions( this, new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE  },OVERLAY_PERMISSION_REQ_CODE);
+                }
                 init();
                 startActivityForResult(mgr.createScreenCaptureIntent(),
                         REQUEST_SCREENSHOT);
@@ -145,15 +149,15 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-            }
-        }
-        mediaProjectionManager = (MediaProjectionManager) this.getSystemService(MEDIA_PROJECTION_SERVICE);
-        startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 1);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            if (!Settings.canDrawOverlays(this)) {
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+//                        Uri.parse("package:" + getPackageName()));
+//                startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+//            }
+//        }
+//        mediaProjectionManager = (MediaProjectionManager) this.getSystemService(MEDIA_PROJECTION_SERVICE);
+//        startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 1);
 
 //        if (ContextCompat.checkSelfPermission(MainActivity.this,
 //                Manifest.permission.WRITE_EXTERNAL_STORAGE) + ContextCompat
@@ -171,11 +175,11 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
-            if (!Settings.canDrawOverlays(this)) {
-                // SYSTEM_ALERT_WINDOW permission not granted...
-            }
-        }
+//        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
+//            if (!Settings.canDrawOverlays(this)) {
+//                // SYSTEM_ALERT_WINDOW permission not granted...
+//            }
+//        }
 
         if (requestCode == REQUEST_SCREENSHOT) {
             if (resultCode == RESULT_OK) {
@@ -188,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
 
                 startService(i);finish();
 
+            }else {
+                finish();
             }
         }
 

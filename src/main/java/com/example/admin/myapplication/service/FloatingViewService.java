@@ -296,9 +296,7 @@ public class FloatingViewService extends Service {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-//                        Log.d("zzzzzzzzzzzz", "DOWN"  +event.getX()+"---------"+event.getY());
 
-                        //remember the initial position.
                         initialX = params.x;
                         initialY = params.y;
 
@@ -311,22 +309,9 @@ public class FloatingViewService extends Service {
                         int Xdiff = (int) (event.getRawX() - initialTouchX);
                         int Ydiff = (int) (event.getRawY() - initialTouchY);
 
-                        //The check for Xdiff <10 && YDiff< 10 because sometime elements moves a little while clicking.
-                        //So that is click event.
-//                        if (Xdiff < 10 && Ydiff < 10) {
-//                            if (isViewCollapsed()) {
-//                                //When user clicks on the image view of the collapsed layout,
-//                                //visibility of the collapsed layout will be changed to "View.GONE"
-//                                //and expanded view will become visible.
-//                                collapsedView.setVisibility(View.GONE);
-////                                expandedView.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                        return true;
+
                     case MotionEvent.ACTION_MOVE:
-//                        Log.d("zzzzzzzzzzzz", "MOVE"  +(initialX + (int) (event.getRawX() - initialTouchX))+"---------"+(initialY + (int) (event.getRawY() - initialTouchY)));
                         Log.d("zzzzzzzzzzzz", "MOVE" + (event.getRawX() - initialTouchX) + "____" + ((event.getRawY() - initialTouchY)));
-                        //Calculate the X and Y coordinates of the view.
                         params.x = initialX + (int) (event.getRawX() - initialTouchX);
                         params.y = initialY + (int) (event.getRawY() - initialTouchY);
 
@@ -516,8 +501,8 @@ public class FloatingViewService extends Service {
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            mMediaRecorder.setAudioEncodingBitRate(8000);
-            mMediaRecorder.setAudioSamplingRate(8000);
+
+
 
             mMediaRecorder.setVideoSize(size.x, size.y);
 //            CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
@@ -528,10 +513,11 @@ public class FloatingViewService extends Service {
 
         } else {
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-            mMediaRecorder.setVideoSize(size.x, size.y);
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             mMediaRecorder.setVideoSize(size.x, size.y);
+            mMediaRecorder.setAudioSamplingRate(8000);
+            mMediaRecorder.setAudioEncodingBitRate(8000);
         }
         if (Build.VERSION.SDK_INT <= 23) {
             File path = new File(Environment
@@ -539,7 +525,7 @@ public class FloatingViewService extends Service {
                             .DIRECTORY_DOWNLOADS) + "/video/");
             path.mkdirs();
             try {
-                File video = File.createTempFile(title, ".3gp", path);
+                File video = File.createTempFile(title, ".mp4", path);
                 mMediaRecorder.setOutputFile(video.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -562,10 +548,10 @@ public class FloatingViewService extends Service {
         }
         int fps;
         if (param.getTdq() == 0) {
-            fps = 30;
+            fps = 20;
         } else if (param.getTdq() == 1) {
             fps = 30;
-        } else fps = 30;
+        } else fps = 40;
         mMediaRecorder.setVideoFrameRate(fps);
         int rotation = window.getDefaultDisplay().getRotation();
         int orientation = ORIENTATIONS.get(rotation + 90);
@@ -573,9 +559,9 @@ public class FloatingViewService extends Service {
 
         int cl = param.getCl();
         if (cl == 0) {
-            mMediaRecorder.setVideoEncodingBitRate(3000000);
+            mMediaRecorder.setVideoEncodingBitRate(1000000);
         } else if (cl == 1) {
-            mMediaRecorder.setVideoEncodingBitRate(3000000);
+            mMediaRecorder.setVideoEncodingBitRate(2000000);
         } else {
             mMediaRecorder.setVideoEncodingBitRate(3000000);
         }
@@ -622,13 +608,18 @@ public class FloatingViewService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void stopScreenSharing() {
+        try {
+            mMediaRecorder.stop();
+        }catch (Exception r){
 
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
-        mMediaRecorder.release();
-        mProjectionManager = null;
-        mMediaProjection.stop();
-        mVirtualDisplay.release();
+        }
+            mMediaRecorder.reset();
+            mMediaRecorder.release();
+            mProjectionManager = null;
+            mMediaProjection.stop();
+            mVirtualDisplay.release();
+
+
 
     }
 
@@ -644,7 +635,10 @@ public class FloatingViewService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        try {
+            notifManager.cancel(ID_NOTI);
+        }catch (NullPointerException e){}
+//
 
     }
 
@@ -741,12 +735,18 @@ public class FloatingViewService extends Service {
         }
     }
 
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            notifManager.cancel(ID_NOTI);
+            try {
+                notifManager.cancel(ID_NOTI);
+            }catch (NullPointerException e){
+
+            }
+
             if (action.equals(ACTION_OPEN)) {
                 Intent intent1 = new Intent(FloatingViewService.this, ListActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
